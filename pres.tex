@@ -1,0 +1,1126 @@
+% Created 2020-03-11 Wed 18:15
+% Intended LaTeX compiler: pdflatex
+\documentclass[presentation]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usetheme{Szeged}
+\author{Mateusz Dudziński}
+\date{2020-01-18 Thu}
+\title{Format PNG - prezentacja na KD}
+\hypersetup{
+ pdfauthor={Mateusz Dudziński},
+ pdftitle={Format PNG - prezentacja na KD},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 26.3 (Org mode 9.1.9)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\begin{frame}{Outline}
+\setcounter{tocdepth}{1}
+\tableofcontents
+\end{frame}
+
+
+\section{Wprowadzenie}
+\label{sec:org82e0c61}
+\begin{frame}[label={sec:org56d7ed2}]{Informacje ogólne}
+\begin{block}{Bezstratny format kompresji obrazu opracowany pod kątem przesyłania grafiki w internecie.}
+\end{block}
+\begin{block}{Następca formamtu GIF.}
+\end{block}
+\begin{block}{Wspiera wiele różnych formatów pikseli - RGB, RGBA, Grayscale, Grayscale + Alpha, 48-bit color.}
+\end{block}
+\begin{block}{Stosunkowo prosty (jak na format kompresji obrazu).}
+\end{block}
+\begin{block}{Nie jest i nigdy nie był opatentowany.}
+\end{block}
+\end{frame}
+\begin{frame}[label={sec:org7f8bf2b}]{Krótka historia}
+\begin{itemize}
+\item Opracowany w 1995
+\item X 1996: Wersja 1.0 - tego czasu format ten jest rekomendowany przez W3C.
+\item I 1997: Opublikowany (bez zmian) w dokumencie {\color{blue}RFC 2083}.
+\item XII 1998: Wersja 1.1 - niewielkie zmiany i trzy nowe bloki ({\color{blue}iCCP}, {\color{blue}sPLT}, oraz {\color{blue}sRGB}).
+\item VIII 1999: Wersja 1.2 - dodatkowo jeszcze jeden blok ({\color{blue}iTXt}).
+\item XI 2003: PNG zostaje standardem ISO ({\color{blue}ISO/IEC 15948:2004}) - standard praktycznie nie różni się od wersji 1.2.
+\end{itemize}
+\vspace{0.5cm}
+\uline{Mało} (istotnych) zmian na przestrzeni lat - to dobry znak.
+\end{frame}
+
+\begin{frame}[label={sec:org6e9e8a6}]{Główne założenia}
+\begin{block}{Prostota i przenośność}
+Jedyny algorytm kompresji zastosowany w tym formacie to populary
+do dzisiaj DEFLATE, będący też główym algorytmem kompresowania
+danych w programie gzip (zip), który posiada bardzo wiele
+wspierających bibliotek. Przez co dekodowanie obrazów PNG nie jest
+trudne.
+\end{block}
+
+\begin{block}{\ldots{} nawet kosztem kompresji danych}
+DEFLATE jest uniwersalnym algorytmem kompresji, radzącym sobie, w
+założeniu, "z każdego rodzaju danymi". Czy to znaczy, że PNG nie w
+prawie żaden sposób zoptymalizowane pod kątem kompresji obrazów?
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:orga4b4254}]{Główne założenia}
+\begin{block}{Niewiele lepszy niż zwykły obraz skompresowany zip'em}
+Przy "standardowych" obrazkach, zwykle PNG daje nieznacznie lepszy
+wynik niż po prostu stworzenie archiwum .zip z tym jedym obrazem
+jako bitmapą. Odpowiedzialne jest za to użycie w PNG transformat
+na obrazie zanim wykoda się na nim DEFLATE'a.
+\end{block}
+
+\begin{block}{Ale ma też inne zalety}
+\begin{itemize}
+\item Wiele różnych formatów kolorów (w tym indeksowany z palety)
+\item Możliwość dodania wielu matadatych (tekst, czas modyfikacji obrazu, fizyczne wymiary)
+\item Możliwość dodawania własnych metadanych prez "rozszerzanie"
+formatu, które jest tak zaprojektowane, żeby standardowe
+dekodery ciągle mogły rozczytać obraz.
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:orga3b3155}]{Stopień kompresji}
+ Skuteczność kompresji zależy przede wszystkim od tego, ile czasu
+ damy koderowi na kompresowanie pliku. Większość programów pozwala
+ użytkownikowi wybrać poziom kompresji pliku - im wyższy tym więcej
+ czasu zajmie kompresowanie
+(poziomy 0-9).
+\begin{center}
+\includegraphics[width=4cm]{./images/slides1.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:orgc9440fc}]{Skuteczność dla różnych obrazów.}
+\begin{itemize}
+\item Rozmiar: 1920 x 1080
+\item Różnica: 8.31Mb / 2.98Mb (2.79)
+\end{itemize}
+\begin{center}
+\includegraphics[width=9cm]{./images/test1.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:org8e8ac11}]{Skuteczność dla różnych obrazów.}
+\begin{itemize}
+\item Rozmiar: 1920 x 1080
+\item Różnica: 6.94Mb / 2.66Mb (2.61)
+\end{itemize}
+\begin{center}
+\includegraphics[width=9cm]{./images/test2.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:org1182e53}]{Skuteczność dla różnych obrazów.}
+\begin{itemize}
+\item Rozmiar: 2000 x 1240
+\item Różnica: 7.47Mb / 2.43Mb (3.07)
+\end{itemize}
+\begin{center}
+\includegraphics[width=9cm]{./images/test3.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:orgdbb6baf}]{Skuteczność dla różnych obrazów.}
+\begin{itemize}
+\item Rozmiar: 1920 x 1200
+\item Różnica: 6.92Mb / 1.09Mb (6.35)
+\end{itemize}
+\begin{center}
+\includegraphics[width=7.5cm]{./images/test4.png}
+\end{center}
+\begin{itemize}
+\item Bardzo długi czas kompresowania obrazu.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:orgcf90bea}]{Skuteczność dla różnych obrazów.}
+\begin{itemize}
+\item Rozmiar: 1920 x 1200
+\item Różnica: 6.92Mb / 1.34Mb (5.16)
+\end{itemize}
+\begin{center}
+\includegraphics[width=7.5cm]{./images/test5.png}
+\end{center}
+\begin{itemize}
+\item Również bardzo długi czas kompresowania obrazu.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:orgab49a79}]{Skuteczność dla różnych obrazów.}
+\begin{itemize}
+\item Rozmiar: 1920 x 1200
+\item Różnica: 6.92Mb / 1.38Mb (5.01)
+\end{itemize}
+\begin{center}
+\includegraphics[width=7.5cm]{./images/test6.png}
+\end{center}
+\begin{itemize}
+\item Również bardzo długi czas kompresowania obrazu.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org2fcff28}]{Skuteczność dla różnych obrazów.}
+\begin{itemize}
+\item Rozmiar: 1920 x 1080
+\item Różnica: 6.23Mb / 6.6Kb (943.94)
+\end{itemize}
+\begin{center}
+\includegraphics[width=9cm]{./images/test10.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:org8d5f405}]{Skuteczność dla różnych obrazów.}
+\begin{itemize}
+\item Rozmiar: 1920 x 1080
+\item Różnica: 8.31Mb / 7.14Mb (1.16)
+\end{itemize}
+\begin{center}
+\includegraphics[width=9cm]{./images/test7.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:org8b1b306}]{Skuteczność dla różnych obrazów.}
+\begin{itemize}
+\item Rozmiar: 1920 x 1080
+\item Różnica: 8.31Mb / 7.01Mb (1.18)
+\end{itemize}
+\begin{center}
+\includegraphics[width=9cm]{./images/test9.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:orgea5d488}]{Skuteczność dla różnych obrazów.}
+\begin{itemize}
+\item Rozmiar: 1920 x 1080
+\item Różnica: 8.31Mb / 6.56Mb (1.27)
+\end{itemize}
+\begin{center}
+\includegraphics[width=9cm]{./images/test8.png}
+\end{center}
+\end{frame}
+
+
+\section{Stuktura pliku}
+\label{sec:orgd4136b8}
+\begin{frame}[label={sec:org72a37d1}]{Stuktura pliku - nagłówek}
+\begin{block}{Pierwsze 8 bajtów są zawsze takie same i służą do rozpoznania czy format pliku to PNG.}
+\vspace{3cm}
+
+\begin{center}
+\includegraphics[width=.9\linewidth]{./images/slides2.png}
+\end{center}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile,label={sec:orgf390abe}]{Stuktura pliku - bloki}
+ \begin{block}{Reszta dokumentu składa się z bloków}
+\begin{center}
+\begin{tabular}{llll}
+[długość] & [rodzaj bloku] & [zawartość] & [suma CRC]\\
+4 bajty & 4 bajty & [długość] bajtów & 4 bajty\\
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+\item Zawartość może mieć długość 0.
+\item Suma CRC jest liczona z rodzaju bloku i zawartości, bez długości.
+\end{itemize}
+
+\(\>\) \(\>\)  \texttt{tEXt} \\
+\(\>\) \(\>\)  \texttt{||||- "Safe to copy"} \\
+\(\>\) \(\>\)  \texttt{|||-{}- (Standard wymaga wielkiej litery)} \\
+\(\>\) \(\>\)  \texttt{||-{}-- "Public (Standard conforming)"} \\
+\(\>\) \(\>\)  \texttt{|-{}--{}- "Not critical"} \\
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:org6177721}]{Stuktura pliku - bloki - przykład}
+\begin{center}
+\includegraphics[width=.9\linewidth]{./images/slides3.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:orgd5a9d80}]{Stuktura pliku - bloki - IHDR}
+\begin{block}{Musi wystąpić jako pierwszy blok, zaraz po nagłówku. Zawiera ogólne informacje o obrazie.}
+\begin{itemize}
+\item Szerokość: 4B
+\item Wysokość: 4B
+\item Bity na pixel (depth): 1B
+\item Colortype: 1B (Grayscale, Grayscale + A, RGB, RGBA, Indeksowany)
+\item Metoda kompresji: 1B (Standard: tylko 0)
+\item Metoda filtrowania: 1B (Standard: tylko 0)
+\item Typ przeplotu (Interlace): 1B (Standard: tylko 0 (brak) i 1 (Adam7))
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:orgf6191b7}]{Stuktura pliku - bloki - PLTE}
+\begin{block}{Dla obrazów typu indexed color, wartości 'pixeli' to indeksy do tablicy zawierającej dokładne informacje o kolorze.}
+\begin{itemize}
+\item Występuje przed zawartością obrazu po {\color{blue}IHDR}.
+\item \alert{MUSI} wystąpić jeżeli poprzedni blok definiował \emph{Colortype} jako \emph{Indeksowany}.
+\item Może też wystąpić dla RGB i RGBA.
+\item Zawiera informacje o odwzorowaniu zawartości obrazu na rzeczywiste kolory (służy jako paleta kolorów).
+\item Rzadko spotykana (blok {\color{blue}sPLT}).
+\item Nie trzeba wysyłać całej: zwykle zmieniane są tylko małe
+wartości. W pliku wysyła się tablicę wartości od 0 do 3N gdzie 3N
+jest zdeterminowane przed długość bloku.
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:org8810dee}]{Stuktura pliku - bloki - IEND}
+\begin{itemize}
+\item Musi wystąpić jako ostatni blok.
+\item Oznacza koniec pliku PNG.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org22e80c8}]{Stuktura pliku - bloki - IDAT}
+\begin{itemize}
+\item Najważniejszy blok. Zawiera (potencjalnie skompresowaną) zawartość obrazu.
+\item Szczegóły za chwilę.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org1c8b223}]{Stuktura pliku - pozostałe (niekrytyczne) bloki}
+\begin{itemize}
+\item {\color{blue}bKGD} - Kolor tła.
+\item {\color{blue}cHRM} - Definicja barw względem przestrzeni CIEXYZ (CIE1931).
+\item {\color{blue}gAMA} - Gamma obrazu.
+\item {\color{blue}hIST} - Opisuje częstotliwość użycia poszczególnych kolorów z
+palety. Przydatny kiedy dekodujący nie ma aż tyle kolorów ile jest
+opisane w palecie.
+\item {\color{blue}tEXt} - dane tekstowe w postaci "klucz - wartość". Klucz do 70
+bajtów, wartość dowolna. Kilka predefiniowanych kluczy \emph{"Author"},
+\emph{"Comment"}, itd.
+\item {\color{blue}zTXt} - jak wyżej, ale wartość jest poddawana kompresji, dokładnie
+tym samym algorytmem co zawartość obrazu.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org6e93924}]{Stuktura pliku - pozostałe (niekrytyczne) bloki}
+\begin{itemize}
+\item {\color{blue}pHYs} - Fizyczne wymiary obrazu. Ilość pikseli na jednostkę w osi X
+i Y.
+\item {\color{blue}tIME} - Ostatni czas zmiany zawartości obrazu.
+\item {\color{blue}tRNS} - Opis kanału alfa dla całego obrazu - nie dotyczy wersji
+\emph{RGBA} i \emph{Grayscale + A}.
+\end{itemize}
+\end{frame}
+
+\section{Kompresja}
+\label{sec:orgdfe24be}
+\begin{frame}[label={sec:orgb2df5fd}]{Kompresja w PNG - schmat}
+\begin{center}
+\includegraphics[width=10cm]{./images/slides6.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:orga94417b}]{Filtry (przekształcenie)}
+\begin{block}{"Filtry" to nazwa stosowana w specyfikacji. Ale wszystkie filtry są bezstratne (dlatego zamiennie będę używał określenia "przekształcenie")}
+\end{block}
+\begin{block}{Metoda przekszałcania zdefiniowana na początku pliku w {\color{blue}IHDR}.}
+\end{block}
+\begin{block}{Póki jest tylko standard definiuje tylko jedną metodę (0).}
+\end{block}
+\begin{block}{Modyfikują poszczególne składowe \emph{pixeli}, co czyni je nieco bardziej skomplikowanymi w implementacji, ale znacznie bardziej skutecznymi. Wartość w kolorze czerwonym oznacza różnice kanałów czerwonych itd.}
+\end{block}
+\begin{block}{Nie kompresujemy danych, tylko je rozdymamy.}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:org303ebe8}]{Filtry (przekształcenie)}
+\begin{block}{Każdy wiersz obrazu (\emph{scanline}) posiada osobne przekształcenie.}
+\end{block}
+\begin{block}{Jak wybrać optymalny filtr? Tak, żeby algorytm DEFLATE działał najskuteczniej!}
+\begin{itemize}
+\item Chcemy jak najwięcej powtarzających się fragmentów (bo \texttt{LZ77}
+pozwala "kopiować" takie fragmenty)
+\item Chcemy używać jak najwięcej tych samych znaków (bo DEFLATE używa
+kodów Huffmana).
+\item O DEFLATE za chwilę.
+\item Prosta, ale bardzo skuteczna i stosowana w praktyce heurystyka: liczymy
+dla każdego filtra sumę wszystkich wartości w wierszu i wybieramy ten,
+który daje najmniejszą sumę.
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:orge38d899}]{Filtry - Metoda 0 (jedyna zdefiniowana przez standard)}
+\begin{block}{5 różnych typów. Każdy wiersz (\emph{scanline}) może mieć inny.}
+\end{block}
+\begin{block}{Typ przekształcenia zajmuje jeden bajt (od 0 do 4) i jest doklejony na początku każdego wiersza.}
+\end{block}
+\begin{block}{Zwiększa to dane które kompresujemy, ale nie drastycznie (około 1 promil dla "standardowych" obrazków 1200x1080).}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:org14c6761}]{Filtry - Metoda 0 (jedyna zdefiniowana przez standard)}
+\begin{columns}
+\begin{column}{0.50\columnwidth}
+\begin{center}
+\includegraphics[width=.9\linewidth]{./images/slides8.png}
+\end{center}
+
+\begin{itemize}
+\item \(\texttt{pixel} = x\)
+\item \(\texttt{pixel} = x - a\)
+\item \(\texttt{pixel} = x - b\)
+\item \(\texttt{pixel} = x - \lfloor \frac{a + b}{2} \rfloor\)
+\item \(\texttt{pixel} = x - \texttt{Paeth}(a, b, c)\)
+\end{itemize}
+
+\vspace{15pt}
+\footnotesize Funckja \texttt{Peath} próbuje ustalić w którym z trzech kierunków gradient obrazu jest najmniejszy.
+\end{column}
+
+\begin{column}{0.60\columnwidth}
+{\color{blue}\texttt{function}} \texttt{Peath(a, b, c) = } \\
+\hspace{15pt} {\color{blue}\texttt{let}} \texttt{p = a + b - c;} \\
+\hspace{15pt} {\color{blue}\texttt{let}} \texttt{pa = abs(p - a);} \\
+\hspace{15pt} {\color{blue}\texttt{let}} \texttt{pb = abs(p - b);} \\
+\hspace{15pt} {\color{blue}\texttt{let}} \texttt{pc = abs(p - c);} \\
+\hspace{15pt} {\color{blue}\texttt{if}} \texttt{pa <= pb} {\color{blue}\texttt{and}} \texttt{pa <= pc} \\
+\hspace{30pt}  \texttt{Pr = a;} \\
+\hspace{15pt} {\color{blue}\texttt{else if}} \texttt{pb <= pc} \\
+\hspace{30pt}  \texttt{Pr = b;} \\
+\hspace{15pt} {\color{blue}\texttt{else}} \\
+\hspace{30pt}  \texttt{Pr = c;} \\
+\hspace{15pt} {\color{blue}\texttt{return}} \texttt{Pr;}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[label={sec:orgf20e3ae}]{Kompresja w PNG - schemat}
+\begin{block}{Podobnie jak w filtrach, tylko metoda 0 jest zdefiniowana przez standard - oznacza użycie algorytmu DELFATE i \emph{zlib} jako formatu bloku.}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:orgf5d4440}]{Kompresja w PNG - schemat}
+\begin{center}
+\includegraphics[width=7cm]{./images/slides4.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:org9e0e0af}]{ZLIB}
+\begin{block}{Abstrachuje dane generowane przez DEFLATE, dodając nagłówki i sumy kontrolne tworząc format danych o nazwe tej samej co biblioteka.}
+\end{block}
+\begin{block}{Bardzo skuteczna biblioteka implmentująca ten format danych, używana powszechnie w przemyśle.}
+m.in: Linux, GNU Binutils, GDB, libpng, libwww, wszystkie
+przeglądarki, cURL, Apache HTTPD, OpenSSH, OpenSSL, FFmpeg, rsync,
+dpkg, RPM, SVN, CVS, git, PostgreSQL, .NET Framework >= 2.0,
+iPhone, Sony PlayStation, \ldots{}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:org1fd7486}]{ZLIB - Format danych}
+\begin{center}
+\begin{tabular}{lllll}
+Cały blok: &  &  &  & \\
+\hline
+[1 B] & [1 B] & [0/4 B] & [?] & [4 B]\\
+{\color{blue}\texttt{CMF}} & {\color{blue}\texttt{FLG}} & {\color{blue}\texttt{DICTID}} & Zawartość & Suma Adler32\\
+\end{tabular}
+\end{center}
+
+\begin{columns}
+\begin{column}{0.45\columnwidth}
+\vspace{-13pt}
+\begin{center}
+\begin{tabular}{ll}
+{\color{blue}\texttt{CMF:}} & \\
+\hline
+[0-3] & [4-7]\\
+{\color{blue}\texttt{CM}} & {\color{blue}\texttt{CINFO}}\\
+\end{tabular}
+\end{center}
+\end{column}
+
+\begin{column}{0.45\columnwidth}
+\vspace{-13pt}
+\begin{center}
+\begin{tabular}{lll}
+{\color{blue}\texttt{FLG:}} &  & \\
+\hline
+[0-4] & [5] & [6-7]\\
+{\color{blue}\texttt{FCHECK}} & {\color{blue}\texttt{FDICT}} & {\color{blue}\texttt{FLEVEL}}\\
+\end{tabular}
+\end{center}
+\end{column}
+\end{columns}
+
+\begin{block}{ }
+\begin{itemize}
+\item {\color{blue}\texttt{CM}} - (Compression method), zdefiniowany tylko 8 - DEFLATE.
+\item {\color{blue}\texttt{CINFO}} - \(log_2\) z rozmiaru okna \texttt{LZ77}, wymanane \(\le\) 7.
+\item {\color{blue}\texttt{FCHECK}} - taka liczba, że: \(31 | (\texttt{CMF}*256 + \texttt{FLG})\)
+\item {\color{blue}\texttt{FDICT}} - Czy użyty został słownik? (Czy {\color{blue}\texttt{DICTID}} obecny).
+\item {\color{blue}\texttt{FLEVEL}} - Informacja, jak bardzo encoder próbował skompresować plik.
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:org70d70d5}]{DEFLATE}
+\begin{block}{Dwie metody kompresji, stosowane jedna po drugiej:}
+\begin{itemize}
+\item LZ77 (Abrahama Lempel, Jacob Ziv, 1977)
+\item Kody Huffmana (David A. Huffman, 1952)
+
+\item Strumień może być dowolnie podzielony na bloki. Każdy blok może
+mieć oddzielnie zdefiniowane drzewo kodów prefiksowych.
+\item Istnieje możliwość nie kompresowania bloku (koder może uznać, że
+jakaś część pliku jest niekompresowalna, wydzielić na nią osobny
+blok i zostawić w niezmienionej formie).
+\end{itemize}
+\end{block}
+
+\begin{block}{Od tej pory pobieramy ze strumienia już praktycznie tylko pojedyńcze bity.}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:orgb832d4c}]{LZ77}
+\begin{itemize}
+\item Metoda szukania powtórzonych już ciągów w strumieniu danych. W
+alfabecie oprócz literałów (naszym przypadku literały to
+wartości pixeli \(\in [0; 255]\)), dodajemy jeszcze parę \(<A; B>\),
+oznaczającą powtórzenie \(B\) znaków zaczynając od pozycji \(A\)
+pozycji przed kursorem.
+\item Okno kompresji na początku jest puste. Enkoder pisze do niego
+bajty, dokładnie takie, jakie zobaczy dekoder. Referencja do
+poprzedniego ciągu może wystąpić tylko w obrębie tego okna
+(zwykle 32k), DEFLATE nie pozwala na więcej.
+\item Zwykle na początku kompresji okno jest
+puste. {\color{blue}\texttt{DICTID}} w
+nagłówku \texttt{zlib} pozwala się umówić koderowi i dekoderowi
+na początkowy stan tego okna.
+\item Potencjalnie gorsze od RLE dla bardzo specyficznych danych
+(\(\mathcal{O}(log{2}n)\) vs \(\mathcal{O}(1)\))? Jak się zaraz
+okaże, niekoniecznie!
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:orgfd45e28}]{LZ77 - przykład}
+\begin{center}
+\includegraphics[width=.9\linewidth]{./images/slides9.png}
+\end{center}
+Wynik: {\color{red}\texttt{... A A A A C C A B }}
+\end{frame}
+
+\begin{frame}[label={sec:org7211a5a}]{LZ77 - przykład}
+\begin{center}
+\includegraphics[width=.9\linewidth]{./images/slides10.png}
+\end{center}
+Wynik: {\color{red}\texttt{... A A A A C C A B }}
+\end{frame}
+
+\begin{frame}[label={sec:orgc35cacc}]{LZ77 - przykład}
+\begin{center}
+\includegraphics[width=.9\linewidth]{./images/slides11.png}
+\end{center}
+Wynik: {\color{red}\texttt{... A A A A C C A B <6;3> }}
+\end{frame}
+
+\begin{frame}[label={sec:orgcc6b1d5}]{LZ77 - porównanie z RLE}
+\begin{block}{Najprostsze RLE:}
+4M2a3t2e1u1s2z \(\rightarrow\) MMMMaattteeuszz \\
+5184000$\backslash$0 \(\rightarrow\) 1200 \texttimes{} 1080 pikseli o
+wartości 0 (czarny obraz) \\
+\end{block}
+
+\begin{block}{Wydaje się, że PNG jest istotnie gorsze w tym przypadku, bo potrzebuje 6.6KB na taki obraz.}
+Możemy wyprodukować wykładniczo rosnące ciągi przy użyciu LZ: \texttt{0 }{\color{OliveGreen}\texttt{<1; 1> <2; 2> <4; 4> <8; 8> ...}} \\
+\end{block}
+
+\begin{block}{Ale zlib pozwala nam zakodować to lepiej!}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:org11e725b}]{LZ77 - porównanie z RLE}
+\begin{block}{Ale zlib pozwala nam zakodować to lepiej!}
+\begin{center}
+\includegraphics[width=.9\linewidth]{./images/slides12.png}
+\end{center}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:org7341895}]{LZ77 - porównanie z RLE}
+\begin{block}{Ale zlib pozwala nam zakodować to lepiej!}
+\begin{center}
+\includegraphics[width=.9\linewidth]{./images/slides13.png}
+\end{center}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:orgf574d20}]{LZ77 - porównanie z RLE}
+\begin{block}{Ale zlib pozwala nam zakodować to lepiej!}
+\begin{center}
+\includegraphics[width=.9\linewidth]{./images/slides14.png}
+\end{center}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:orgab161c5}]{LZ77 - porównanie z RLE}
+\begin{block}{Ale zlib pozwala nam zakodować to lepiej!}
+\begin{center}
+\includegraphics[width=.9\linewidth]{./images/slides15.png}
+\end{center}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:orgf970bdd}]{LZ77 - porównanie z RLE}
+\begin{block}{Ale zlib pozwala nam zakodować to lepiej!}
+\begin{center}
+\includegraphics[width=.9\linewidth]{./images/slides16.png}
+\end{center}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:org6f05613}]{LZ77 - porównanie z RLE}
+\begin{block}{Czyli możemy zakodować w \(\mathcal{O}(1)\) powtórzenie dowolnie wiele razy jednego znaku.}
+\end{block}
+\begin{block}{No to dlaczego potrzebujemy 6.6KB na taki prosty obraz?}
+\begin{itemize}
+\item Bo deflate przeznacza bardzo niewiele bitów na długość podciągu
+który kopiujemy - możemy maksymalnie skopiować 258 znaków.
+\item A to dlatego, że na liczbę mówiącą ile należy się cofnąć, jest
+przeznaczona stała liczba bitów!
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:org57752d0}]{LZ77 - jak zapisywać literały oznaczające skok?}
+\begin{block}{Jaki wogóle mamy alfabet?}
+\begin{itemize}
+\item Znak z \([0; 255]\) - bajt o takiej wartości, \(256\) - koniec.
+\item Znak z \([257; 285]\)  - skopiowanie ciągu który już się pojawił.
+\item Wartości \(\in [257; 285]\) mówią nam, że będziey kopiować i definiują ile
+bajtów skopiujemy (zaraz zobaczymy jak). Jak będziemy wiedzieć \uline{skąd}
+kopiować? Użyjemy do tego drugiego alfabetu.
+\item Drugi alfabet będzie nam mówił ile musimy się cofnąć.
+\item W obu przypadkach bo znaku następują dodatkowe bity podające
+informacje. Np. '277' oznacza kopiowanie od 67 do 82 bitów. A
+następne 4 bity mówią nam dokałdnie ile musimy dodać do 67.
+\end{itemize}
+\end{block}
+\end{frame}
+
+
+\begin{frame}[label={sec:org23c4dfc}]{Jak DEFLATE koduje skok LZ?}
+\begin{block}{Pierwszy element z pary wyznacza ilość kopiowanych bajtów. Po nim mogą nastąpić dodatkowe bity.}
+{\tiny
+\begin{center}
+\begin{tabular}{rrrllrrrllrrr}
+Wart. & Nast. & Kopiuj &  &  & Wart. & Nast. & Kopiuj &  &  & Wart. & Nast. & Kopiuj\\
+\hline
+257 & 0 & 3 &  &  & 267 & 1 & 15-16 &  &  & 277 & 4 & 67-82\\
+258 & 0 & 4 &  &  & 268 & 1 & 17-18 &  &  & 278 & 4 & 83-98\\
+259 & 0 & 5 &  &  & 269 & 2 & 19-22 &  &  & 279 & 4 & 99-114\\
+260 & 0 & 6 &  &  & 270 & 2 & 23-26 &  &  & 280 & 4 & 115-130\\
+261 & 0 & 7 &  &  & 271 & 2 & 27-30 &  &  & 281 & 5 & 131-162\\
+262 & 0 & 8 &  &  & 272 & 2 & 31-34 &  &  & 282 & 5 & 163-194\\
+263 & 0 & 9 &  &  & 273 & 3 & 35-42 &  &  & 283 & 5 & 195-226\\
+264 & 0 & 10 &  &  & 274 & 3 & 43-50 &  &  & 284 & 5 & 227-257\\
+265 & 1 & 11-12 &  &  & 275 & 3 & 51-58 &  &  & 285 & 0 & 258\\
+266 & 1 & 13-14 &  &  & 276 & 3 & 59-66 &  &  &  &  & \\
+\end{tabular}
+\end{center}
+}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:orgf180097}]{Jak DEFLATE koduje skok LZ?}
+\begin{block}{Na indeks z którego kopiujemy mamy 5 bitów + ew. dodatkowe bity.}
+{\tiny
+\begin{center}
+\begin{tabular}{rrrllrrrllrrr}
+Wart. & Nast. & Cofnij &  &  & Wart. & Nast. & Cofnij &  &  & Wart. & Nast. & Cofnij\\
+\hline
+0 & 0 & 1 &  &  & 10 & 4 & 33-48 &  &  & 20 & 9 & 1025-1536\\
+1 & 0 & 2 &  &  & 11 & 4 & 49-64 &  &  & 21 & 9 & 1537-2048\\
+2 & 0 & 3 &  &  & 12 & 5 & 65-96 &  &  & 22 & 10 & 2049-3072\\
+3 & 0 & 4 &  &  & 13 & 5 & 97-128 &  &  & 23 & 10 & 3073-4096\\
+4 & 1 & 5-6 &  &  & 14 & 6 & 129-192 &  &  & 24 & 11 & 4097-6144\\
+5 & 1 & 7-8 &  &  & 15 & 6 & 193-256 &  &  & 25 & 11 & 6145-8192\\
+6 & 2 & 9-12 &  &  & 16 & 7 & 257-384 &  &  & 26 & 12 & 8193-12288\\
+7 & 2 & 13-16 &  &  & 17 & 7 & 385-512 &  &  & 27 & 12 & 12289-16384\\
+8 & 3 & 17-24 &  &  & 18 & 8 & 513-768 &  &  & 28 & 13 & 16385-24576\\
+9 & 3 & 25-32 &  &  & 19 & 8 & 769-1024 &  &  & 29 & 13 & 24577-32768\\
+\end{tabular}
+\end{center}
+}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:org6c80802}]{Jak DEFLATE koduje skok LZ?}
+\begin{block}{Przykład:}
+{\color{black}\texttt{1 0 0 0 0 1 1 1 0}}
+{\color{red}\texttt{1 0}}
+{\color{black}\texttt{1 0 1 0}}
+{\color{blue}\texttt{0 1 0 1}}
+
+\begin{itemize}
+\item Ile kopiujemy?
+100001110\(_{\text{2}}\) = 270\(_{\text{10}}\) \\
+\(T_{1}(270)\) = \((2, 23)\) (czytamy \(2\) bity i dodajemy do \(23\)) \\
+{\color{red}10\(_{\text{2}}\)} = {\color{red}2\(_{\text{10}}\)} \\
+Czyli kopiujemy 23 + {\color{red}2} = 25.
+
+\item Skąd kopiujemy?
+1010\(_{\text{2}}\) = 10\(_{\text{10}}\) \\
+\(T_{2}(10)\) = \((4, 33)\) (czytamy \(4\) bity i dodajemy do \(33\)) \\
+{\color{blue}0101\(_{\text{2}}\)} = {\color{blue}5\(_{\text{10}}\)} \\
+Czyli kopiujemy z pozycji 33 + {\color{blue}5} = 38 bajtów wstecz.
+\end{itemize}
+\end{block}
+
+\begin{block}{Zatem zakodowany skok to \(<25; 38>\).}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:org1ad657d}]{Podsumowanie tej części:}
+\begin{itemize}
+\item Nasz ciąg skompresowanych danych składa się teraz z wartości bajtowych
+\(B = [0; 255]\) oraz z (koncepcyjnie) par \(<A; \Delta>\) oznaczających
+kopoiowanie \(A\) bajtów z pozycji \(B\) bajtów za obecny indeksem.
+\item Wartości bajtowe z B i wartości z \(A\) łączymy w jeden alfabet \(\Sigma =
+     [0;258]\). Na odległości mamy drugi alfabet: \(\Delta = [0; 31]\). Po
+niektórych wartościach związanymi z kopiowaniem LZ mogą nastąpić dodatkowe
+bity, ale będziemy wiedzieć ile ich jest (literał nam to wyznacza).
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org9e52388}]{Kodowanie Huffmana}
+\begin{itemize}
+\item Każde słowo z alfabetu \(\Sigma\) zastępujemy ciągiem bitowym
+odwrotnie proporcjonalnym do pradopodobieństwa jego wystąpienia.
+\item Inaczej, chcemy żeby najczęsciej występujące elementy były
+reprezentowane przez jak najkrótsze ciągi bitów.
+\item Minimalizujemy: \(\sum_{i \in \Sigma} (p_{i} * |H(i)|)\), gdzie
+\(H(i)\) to ciąg bitów jaki przypisujemy słowu \(i\).
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org17972ef}]{Kodowanie Huffmana}
+\begin{itemize}
+\item Kody wyrazów z naszego alfabetu reprezentujemy przez drzewo
+binarne (drzewo Huffmana).
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=6cm]{./images/slides18.png}
+\end{center}
+
+\begin{block}{Takie drzewo daje nam wszystkie informacje niezbędne do dekodowania:}
+\texttt{1 0 0 1 1 0 0 0 1 0 0 0 1 0 1 1} \(\rightarrow\) \txettt{B A B B A D A B C} \\
+\texttt{+ +++ + + +++ +++++ +++ + +++++}
+\end{block}
+\end{frame}
+
+\begin{frame}[label={sec:orgf5c935e}]{Kodowanie Huffmana}
+\begin{columns}
+\begin{column}{0.45\columnwidth}
+\begin{itemize}
+\item Jak konstruować takie drzewo?
+\begin{itemize}
+\item Oczywiście, zachłannie.
+\item Używając kolejki priorytetowej można szukać najmniejszego
+poddrzewa w czasie \(\Theta(n log n)\). Drzewo o \(n\) liściach ma
+\(2n - 1\) węzły, więc cały algorytm można wykonać w czasie
+\(\Theta(n log n)\).
+\end{itemize}
+\end{itemize}
+\end{column}
+
+\begin{column}{0.45\columnwidth}
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=3.5cm]{./images/slides20.png}
+\caption{en.wikipedia.org}
+\end{figure}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[label={sec:org4184db9}]{Kodowanie Huffmana}
+\begin{itemize}
+\item Wysłanie całego drzewa (np. podając korzeń i wszystkie
+krawędzie), jest nieakceptowalne, bo zawiera za dużo pamięci.
+\item DEFLATE radzi sobie inaczej:
+\begin{itemize}
+\item Dla każdej długości \(N\), kody mają kolejne wartości (w sensie
+leksykograficznym).
+\item Krótsze kody poprzedzają leksykograficznie dłuższe.
+\end{itemize}
+\item Drzewo z poprzedniego przykładu wyglądałoby tak:
+\end{itemize}
+
+\begin{center}
+\includegraphics[width=6cm]{./images/slides17.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:orgdcc5bce}]{Dzięki temu dekoder może wygenerować drzewo Huffmana na podstawie tylko i wyłącznie informacji o długości kodów dla poszczególnych znaków.}
+\begin{itemize}
+\item Algorytm wygląda tak:
+\begin{enumerate}
+\item Niech blcount[N] oznacza liczbę kodów o długości N, N >= 1.
+\end{enumerate}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,label={sec:org8fc05a3}]{Dzięki temu dekoder może wygenerować drzewo Huffmana na podstawie tylko i wyłącznie informacji o długości kodów dla poszczególnych znaków.}
+ \begin{itemize}
+\item Algorytm wygląda tak:
+\begin{enumerate}
+\item Niech blcount[N] oznacza liczbę kodów o długości N, N >= 1.
+\item Znajdź wartość najmniejszego leksykograficznie kodu dla każdej długości:
+\end{enumerate}
+\end{itemize}
+\begin{verbatim}
+code = 0;
+blcount[0] = 0;
+for (bits = 1; bits <= MAX_BITS; bits++) {
+    code = (code + blcount[bits-1]) << 1;
+    next[bits] = code;
+}
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[fragile,label={sec:orgca05249}]{Dzięki temu dekoder może wygenerować drzewo Huffmana na podstawie tylko i wyłącznie informacji o długości kodów dla poszczególnych znaków.}
+ \begin{itemize}
+\item Algorytm wygląda tak:
+\begin{enumerate}
+\item Niech blcount[N] oznacza liczbę kodów o długości N, N >= 1.
+\item Znajdź wartość najmniejszego leksykograficznie kodu dla każdej długości.
+\item Kolejnym znakom przypisz leksykograficzne kolejne wartości ciągów:
+\end{enumerate}
+\end{itemize}
+\begin{verbatim}
+for (n = 0; n <= MAX_CODE; n++) {
+    len = input[n]; // długość ciągu dla znaku n;
+    if (len <> 0) { huffman[n] = next[len]; next[len]++; }
+}
+\end{verbatim}
+\end{frame}
+
+\begin{frame}[label={sec:orgbed7e80}]{Dzięki temu dekoder może wygenerować drzewo Huffmana na podstawie tylko i wyłącznie informacji o długości kodów dla poszczególnych znaków.}
+\begin{itemize}
+\item Załóżmy że mamy alfabet \(\Sigma = \{A, B, C, D, E, F, G, H\}\) i
+że drzewo jest kodowane przez ciąg (3, 3, 3, 3, 3, 2, 4, 4),
+tzn. A ma kod długości 3, B długości 3, \ldots{} , F długości 2, \ldots{}
+\begin{enumerate}
+\item \texttt{blcount[N] = [0, 0, 1, 5, 2]}
+\item \texttt{next[N] = [0, 0, 0, 2, 14]}
+\item \texttt{output[i] = [2, 3, 4, 5, 6, 0, 14, 15] = [010, 011, 100, 101, 110, 00, 1110, 1111]}
+\end{enumerate}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org5e2d01b}]{Zdekodowane drzewo}
+\begin{center}
+\includegraphics[width=.9\linewidth]{./images/slides19.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:orgfc3bca2}]{Jeszcze większa kompresja drzwa Huffmana}
+\begin{itemize}
+\item Ciąg takich długości, choć istotnie mniejszy niż wymienianie
+wszystkich krawędzi, ciągle jest bardzo duży.
+\item Szczególnie, że na jedną liczbę musielibyśmy przeznaczyć cały bajt
+(albo nawet dwa bajty).
+\item Ponieważ mamy dwa alfabety, jeśli jeden z nich będzie bardzo mały
+(potencjalnie zerowy), to nie chcemy marnować dużo bitów na długości kodów
+Huffmana.
+\item Zamiast podawać po kolei długości wszystkich kodów zdefiniujmy
+alfabet, który pozwoli nam wyrazić to samo, ale krócej.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[label={sec:org0ab209c}]{Alfabet dla długości kodów jest następujący:}
+\begin{itemize}
+\item 0-15: Kod długości \([0; 15]\).
+\item 16: Skopiuj poprzednią długość \((3 + k) \in [3; 6]\) razy.
+Dwa następne bity wyznaczją \(k\).
+\item 17: Powtórz kod długości \(0\), \((3 + k) \in [3; 10]\) razy.
+3 następne bity wyznaczją \(k\).
+\item 18: Powtórz kod długości \(0\), \((11 + k) \in [11; 138]\) razy.
+7 następnych bitów wyznacza \(k\).
+\end{itemize}
+
+\begin{block}{Przykład:}
+\texttt{1 0 0 0 1 0 0 0 0 1 1 1 0 0 0 0 1 0} \(\rightarrow\) \texttt{8 16 3 16 2} \\
+\texttt{+++++++ +++++++++ +++ +++++++++ +++} \\
+
+\hspace{10pt} \(\rightarrow\) \txettt{8 8 8 8 8 8 8 8 8 8 8 8} \\
+\end{block}
+\end{frame}
+
+
+\begin{frame}[label={sec:org20f081b}]{\uline{Ten} alfabet możemy skompresować kodami Huffmana!}
+\begin{itemize}
+\item Na początku bloku wysyłamy długości kodów dla tego alfabetu \(\Sigma_{2} =
+     \{0, 1, ..., 18\}\).
+\item Ale nawet to można ulepszyć. Jest szansa, że nie użyjemy wszystkich liter
+alfabetu. Więc najpierw wysyłamy 4 bitową informację, dla ilu znaków z
+\(\Sigma_{\text{2}}\) podejemy długości kodów. Następnie podajemy te długości.
+\item W jakiej kolejności? Po kolei? \((0, 1, 2, 3, ...)\)
+\item Nie: \texttt{16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15}
+\item Przez to, jeżeli elementy alfabetu, jakich potrzebujemy to \(0, 5, 6, 7, 8,
+     16, 17, 18\). Możemy wysłać tylko pierwsze 8 liczb zamiast 16.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:orgc9d305b}]{Definicja drzewa i tak zajumie dużo miejsca.}
+\begin{itemize}
+\item Co jeśli mamy na tyle dużo danych, że chcemy je skompresować, ale na tyle
+mało, że definicja tablicy Huffmana zajmuje duży fragemnt kompresowanych
+danych?
+\item Istnieje możeliwość zakodowania za pomocą z góry ustalonego drzewa
+Huffmana: na początku bloku DEFLATE jest bit oznaczający że takie drzewo
+jest użyte. Wtedy definicja drzewa nie następuje. DEFLATE definiuje takie
+"domyślne" drzewo.
+\item Nie jest to kodowanie optymalne, ale możemy odzystać stracone miejsce
+oszczędzając na pamięci nie wysyłając drzewa Huffmana, które choć bardzo
+skompresowane, ciągle zajmuje niemało miejsca.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org6d2c57e}]{Ustalona tablica Huffmana:}
+\begin{center}
+\begin{tabular}{lrr}
+Znak & Bity & Wartości\\
+\hline
+0 - 143 & 8 & 00110000-10111111\\
+144 - 255 & 9 & 110010000-111111111\\
+256 - 279 & 7 & 0000000-0010111\\
+280 - 287 & 8 & 11000000-11000111\\
+\end{tabular}
+\end{center}
+
+Wartości elementów alfabetu definiującego nawroty \([0; 31]\) są wszystkie
+reprezentowane przez 5-cio bitowe kody (w kolejności leksykograficznej).
+\end{frame}
+
+\begin{frame}[label={sec:orgb667f83}]{Jeżeli koder uzna, że dane i tak są niekompresowalne, może zostawić dane bez kompresji.}
+Większość programów zapisujących obrazy w formacie PNG zrobi tak, dla poziomu
+kompresji 0. Takie obrazy mogą jednak ważyć \emph{więcej} niż zwykła bitmapa, bo
+choć DEFLATE pozostawia dane bez kompresji, filtry zostały zastosowane (PNG
+nie pozwala na zapisanie obrazu bez filtrów), więc dane są rozdymane.
+\end{frame}
+
+
+\begin{frame}[label={sec:org6f61da2}]{Przykład dekodowania (static Huffman):}
+\texttt{00110001 00110000 00110001 00110002 00110004 00110002 00110003 00110002 00110004 00110003 00110002 00110004 0000101 0 00005 1 00110000 00110000} \\
+
+\texttt{1 0 1 2 4 2 3 2 4 3 2 4 265} {\color{red}\texttt{0}} \texttt{5} {\color{red}\texttt{1}} \texttt{0 0} \\
+
+\texttt{1 0 1 2 4 2 3 2 4 3 2 4 (11; 8) 0 0} \\
+
+{\color{red}\texttt{1}} \texttt{0 1 2 4 2 3 2 4 3 2 4 4 2 3 2 4 3 2 4 4 2 3 0 0} \\
+
+Niech to będzie cały zdekodowany scanline
+RGBA. {\color{red}\texttt{1}} oznacza rodzaj
+filtru. Wtedy żeby odzyskać dodajemy wartość z poprzedniego pixela. \\
+\texttt{0 1 2 4  2 3 2 4  3 2 4 4   2 3 2 4   3 2 4  4   2  3  0  0} \\
+
+\texttt{0 1 2 4  2 4 4 8  5 6 8 12  5 6 8 12  8 8 12 16  10 11 12 16} \\
+\end{frame}
+
+\begin{frame}[label={sec:orgdaac855}]{Zalecany algorytm}
+\begin{itemize}
+\item Kompresor kończy blok kiedy uznaje, że rozpoczęcie nowego bloku
+(z innym drzewem Huffmana) jest opłacalne, lub kiedy kończy mu
+się miejsca w buforze pamięci.
+\item Zalecane użycie tablicy haszującej z dowiązaniami do szukania
+powtórzonych ciągów używając funkcji haszującej operujących na
+3-bajtowych sekwencjach.
+\item Załóżmy że dostajemy na wejściu "XYZ" (te znaki nie muszą być
+różne).
+\begin{itemize}
+\item Sprawdzamy hasz słowa "XYZ".
+\item Jeśli nie mamy takiego w tablicy, to kompresor pisze literał
+"X" a następnie dodaje następny bajt "W" do aktualnego ciągu
+otrzymując "YZW".
+\item Jeśli wystąpienie istnieje, kompresor sprawdza wszystkie ciągi
+znajdujące się w komórce haszującej się tak jak
+"XYZ". Wymierając najdłuższy pasujący ciąg.
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:orgf89c2ff}]{Zalecany algorytm}
+\begin{itemize}
+\item Przeszukiwanie list odbywa się od tych które wystąpiły ostatnio
+do tych, które wystąpiły najdawniej (mały dystans skoku przewaga
+podczas kodowania Huffmana).
+\item Listy to zwykłe, jednostronne listy. Usuwanie wartości jest
+leniwe. Podczas przeszukiwania gdy kompresor natrafia na ciąg,
+który wystąpił dalej niż rozmiar okna, usuwa go wtedy.
+\item Bardzo długie listy są ograniczone przez jakąś ustaloną stałą
+długość (one rosną dość szybko).
+\item "Lazy match": załóżmy że mamy ciąg "XYZWABC". Może się okazać, że
+zamiast teraz kodować skok bardziej nam się opłaca zakodować
+literał "X" a następnie "YZWABC [następne bajty które pasują]".
+Kompresor może wyemitować skok, a następnie zrezygnować z niego
+kodując "X" a następnie lepszy skok.
+\item Im bardziej zależy użytkownikowi na kompresji, tym więcej czasu
+jest poświęcene szukaniu najlepszego ciągu.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org8b8d72f}]{Podsumowanie kompresji:}
+\begin{itemize}
+\item Mając już gotowy ciąg literaów i par oznaczająych kopię LZ
+liczymy wystąpienia i budujemy otpymalne drzewo Huffmana
+algorytmem zachłannym, albo decydujemy się użyć domyślnego drzewa
+Huffmana.
+\item Następnie zapisujemy długości ciągów dla kolejnych elementów alfabetu.
+\item Te długości kodujemy alfabetem \(\Sigma_{\text{2}}\) (tym \([0; 18]\)).
+\item Wysyłamy długości elementów \(\Sigma_{\text{2}}\), ale tylko tyle ile potrzebujemy.
+\item Dekoder rozszyfrowuje \(\Sigma_{\text{2}}\) a następnie drzwo Huffmana.
+\item Następnie czyta resztę zakodowanej informacji albo dodajać bajty
+albo kopiując.
+\end{itemize}
+\end{frame}
+
+
+\section{Przeplot}
+\label{sec:orgcd09956}
+\begin{frame}[label={sec:org0912a1f}]{Adam7}
+\begin{block}{Przeplot pozwala nam wysałać obraz tak, żeby dekodujący zobaczył go wcześniej, w mniejszej rozdzielczości.}
+\end{block}
+\begin{block}{PNG używa algorytmu ADAM7, który jest skuteczniejszy niż algorytm używany w GIF'ie}
+\begin{itemize}
+\item Więcej iteracji w dwóch wymiarach, a nie tylko w jednym
+\end{itemize}
+\end{block}
+\end{frame}
+\begin{frame}[label={sec:org2477be6}]{Adam7}
+Obraz \\
+\texttt{1 2} \\
+\texttt{3 3} \\
+
+Przechodzi na: \\
+\texttt{1 . 2 .} \\
+\texttt{. . . .} \\
+\texttt{3 . 3 .} \\
+\texttt{. . . .} \\
+
+A następnie: \\
+\texttt{1 4 2 4} \\
+\texttt{5 5 5 5} \\
+\texttt{3 4 3 4} \\
+\texttt{5 5 5 5} \\
+\end{frame}
+
+\begin{frame}[label={sec:org4a73cb5}]{Adam7 lepiej niż w GIF'ie}
+\begin{itemize}
+\item W GIF'ie \texttt{1 2} zostałby zamieniony \texttt{1 . 2 .} a
+następnie wypełniony \texttt{1 3 2 4}.
+\item Tylko wertykalnie w porównaniu do ADAM7.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org287e6a5}]{Adam7 (start)}
+\begin{center}
+\includegraphics[width=4cm]{./images/interlace-0.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:orgb33b59d}]{Adam7 (etap 1)}
+\begin{center}
+\includegraphics[width=4cm]{./images/interlace-1.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:org6484f97}]{Adam7 (etap 2)}
+\begin{center}
+\includegraphics[width=4cm]{./images/interlace-2.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:org1b7b550}]{Adam7 (etap 3)}
+\begin{center}
+\includegraphics[width=4cm]{./images/interlace-3.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:org499b941}]{Adam7 (etap 4)}
+\begin{center}
+\includegraphics[width=4cm]{./images/interlace-4.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:orgdefcac7}]{Adam7 (etap 5)}
+\begin{center}
+\includegraphics[width=4cm]{./images/interlace-5.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:org8eb476a}]{Adam7 (etap 6)}
+\begin{center}
+\includegraphics[width=4cm]{./images/interlace-6.png}
+\end{center}
+\end{frame}
+
+\begin{frame}[label={sec:org8ae31eb}]{Adam7 (etap 7)}
+\begin{center}
+\includegraphics[width=4cm]{./images/interlace-7.png}
+\end{center}
+\end{frame}
+
+
+\section{Podsumowanie}
+\label{sec:org5bdd377}
+\begin{frame}[label={sec:org25e7695}]{Podsumowanie}
+\begin{itemize}
+\item Format PNG to prosty format - jego założenia to nie najbardziej
+efektywna kompresja, tylko przenośność i prostota.
+\item Sercem kompresji jest bezstratny algorytm "kompresji ogólnej",
+nie zaprojektowany pod kodowanie bajtów obrazu.
+\item Na jego skuteczność wpływają filtry które transforumją obraz do
+znacznie bardziej przystępnej postaci.
+\item Znacznie lepsze efekty kompresji można osiągnąć stosując algorytm
+kompresji stratnej - np. JPG.
+\item PNG jest jednak całkiem skuteczny na "typowych" obrazach -
+stopień kompresji pomiędzy \(2.5\) a \(3.5\).
+\item Jest jednak ustandaryzowany, łatwo rozszeżalny, a do dekompresji
+można użyć bardzo popularnej biblioteki na dogodnej licencji.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org750fe07}]{Referencje}
+\begin{enumerate}
+\item \scriptsize{T. Boutell}, \\
+\normalsize{"PNG (Portable Network Graphics) Specification"} \vspace{5pt}
+\item \scriptsize{L. Peter Deutsch}, \\
+\normalsize{"DEFLATE Compressed Data Format Specification (RFC 1951)"} \vspace{5pt}
+\item \scriptsize{L. Peter Deutsch, J-L. Gailly}, \\
+\normalsize{"ZLIB Compressed Data Format Specification"} \vspace{5pt}
+\item \scriptsize{Ziv J., Lempel A.}, \\
+\normalsize{"A Universal Algorithm for Sequential Data Compression"}
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[label={sec:org5dae114}]{Dziękuję za uwagę.}
+\end{frame}
+\end{document}
